@@ -30,7 +30,7 @@ public class TestStruct01 {
 		// Ascii character reference:
 		// http://www.alanwood.net/unicode/box_drawing.html
 		// Binary values for directions: N:1,E:2,S:4,W:8
-		private static String[] toStringArray = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
+		private static String[] toStringArray = { "?", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 		TestStruct01.NodeCoord coord;
 		TestStruct01.Node[] edges;
 
@@ -122,9 +122,9 @@ public class TestStruct01 {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < nodes.length; i++) {
 			for (int j = 0; j < nodes[i].length; j++) {
-				sb.append(nodes[i][j] == null ? " " : nodes[i][j].toString());
+				sb.append(nodes[i][j] == null ? "█" : nodes[i][j].toString());
 			}
-			sb.append("\n");
+			sb.append(System.getProperty("line.separator"));
 		}
 		return sb.toString();
 	}
@@ -208,6 +208,11 @@ public class TestStruct01 {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(TestStruct01.generateAldousBroder(10, 15));
+		int rows = rand.nextInt(25), cols = rand.nextInt(25);
+		if (args.length > 0)
+			rows = cols = Integer.parseInt(args[0]);
+		if (args.length > 1)
+			cols = Integer.parseInt(args[1]);
+		System.out.println(TestStruct01.generateAldousBroder(rows, cols));
 	}
 }
