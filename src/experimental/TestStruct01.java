@@ -25,7 +25,10 @@ public class TestStruct01 {
 		}
 	}
 
-	protected class Node {
+	protected static class Node {
+		// Simple math will determine the character for the maze joint
+		// N:1,E:2,S:4,W:8
+		private static String[] toStringArray = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┰", "┼" };
 		TestStruct01.NodeCoord coord;
 		TestStruct01.Node[] edges;
 
@@ -81,6 +84,20 @@ public class TestStruct01 {
 		public void setWest(Node west) {
 			edges[3] = west;
 		}
+
+		@Override
+		public String toString() {
+			int toStringIndex = 0;
+			if (edges[0] != null)
+				toStringIndex += 1;
+			if (edges[1] != null)
+				toStringIndex += 2;
+			if (edges[2] != null)
+				toStringIndex += 4;
+			if (edges[3] != null)
+				toStringIndex += 8;
+			return toStringArray[toStringIndex];
+		}
 	}
 
 	private static Random rand;
@@ -96,6 +113,18 @@ public class TestStruct01 {
 		this.rows = rows;
 		this.columns = columns;
 		rand = new Random();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < nodes.length; i++) {
+			for (int j = 0; j < nodes[i].length; j++) {
+				sb.append(nodes[i][j].toString());
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 	private static void joinAdjacentEdges(Node o1, Node o2) {
@@ -129,14 +158,54 @@ public class TestStruct01 {
 	 * @param rows
 	 * @param columns
 	 * @return returns the newly generated maze. */
-	public static TestStruct01 generateAldousBroder(int rows, int columns) {
+	public static TestStruct01 generateAldousBroder(final int rows, final int columns) {
 		TestStruct01 drunkenWalkMaze = new TestStruct01(rows, columns);
-		int totalNodes = rows * columns, visitedNodes = 0, drunkX = rand.nextInt(columns), drunkY = rand.nextInt(rows);
-
+		int totalNodes = rows * columns, visitedNodes = 0, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
+		Node[][] drunkNodes = drunkenWalkMaze.nodes;
+		Node currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
+		Node previousNode = currentNode;
 		while (visitedNodes < totalNodes) {
-
+			previousNode = currentNode;
+			int direction = rand.nextInt(5);
+			switch (direction)
+				{
+				case 0: // North
+					if (drunkRow == 0)
+						// drunk runs face first into a wall. He can't continue so nothing
+						// happens this iteration.
+						continue;
+					drunkRow--;
+					break;
+				case 1: // East
+					if (drunkCol + 1 == columns)
+						continue;
+					drunkCol++;
+					break;
+				case 2: // South
+					if (drunkRow + 1 == rows)
+						continue;
+					drunkRow++;
+					break;
+				case 3: // West
+					if (drunkCol == 0)
+						continue;
+					drunkCol--;
+					break;
+				}
+			previousNode = currentNode;
+			if (drunkNodes[drunkRow][drunkCol] == null) {
+				currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
+				joinAdjacentEdges(previousNode, currentNode);
+				visitedNodes++;
+			} else {
+				currentNode = drunkNodes[drunkRow][drunkCol];
+			}
 		}
 		return drunkenWalkMaze;
 	}
 
+	public static void main(String[] args) {
+		TestStruct01 drunkMaze = TestStruct01.generateAldousBroder(10, 10);
+		System.out.println();
+	}
 }
