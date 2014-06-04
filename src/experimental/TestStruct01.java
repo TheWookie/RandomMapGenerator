@@ -27,7 +27,9 @@ public class TestStruct01 {
 
 	protected static class Node {
 		// Simple math will determine the character for the maze joint
-		// N:1,E:2,S:4,W:8
+		// Ascii character reference:
+		// http://www.alanwood.net/unicode/box_drawing.html
+		// Binary values for directions: N:1,E:2,S:4,W:8
 		private static String[] toStringArray = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 		TestStruct01.NodeCoord coord;
 		TestStruct01.Node[] edges;
@@ -110,9 +112,6 @@ public class TestStruct01 {
 			throw new IllegalArgumentException("Sizes must be a positive integer.");
 		}
 		nodes = new Node[rows][columns];
-		// for (int i = 0; i < nodes.length; i++) {
-		// nodes[i] = new Node[columns];
-		// }
 		this.rows = rows;
 		this.columns = columns;
 		rand = new Random();
@@ -200,7 +199,7 @@ public class TestStruct01 {
 				currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
 				joinAdjacentEdges(previousNode, currentNode);
 				visitedNodes++;
-				// System.out.println(drunkenWalkMaze);
+				System.out.println(drunkenWalkMaze);
 			} else {
 				currentNode = drunkNodes[drunkRow][drunkCol];
 			}
@@ -209,7 +208,6 @@ public class TestStruct01 {
 	}
 
 	public static void main(String[] args) {
-		TestStruct01 drunkMaze = TestStruct01.generateAldousBroder(10, 15);
-		System.out.println(drunkMaze);
+		System.out.println(TestStruct01.generateAldousBroder(10, 15));
 	}
 }
