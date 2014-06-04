@@ -28,7 +28,7 @@ public class TestStruct01 {
 	protected static class Node {
 		// Simple math will determine the character for the maze joint
 		// N:1,E:2,S:4,W:8
-		private static String[] toStringArray = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┰", "┼" };
+		private static String[] toStringArray = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 		TestStruct01.NodeCoord coord;
 		TestStruct01.Node[] edges;
 
@@ -110,6 +110,9 @@ public class TestStruct01 {
 			throw new IllegalArgumentException("Sizes must be a positive integer.");
 		}
 		nodes = new Node[rows][columns];
+		// for (int i = 0; i < nodes.length; i++) {
+		// nodes[i] = new Node[columns];
+		// }
 		this.rows = rows;
 		this.columns = columns;
 		rand = new Random();
@@ -120,7 +123,7 @@ public class TestStruct01 {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < nodes.length; i++) {
 			for (int j = 0; j < nodes[i].length; j++) {
-				sb.append(nodes[i][j].toString());
+				sb.append(nodes[i][j] == null ? " " : nodes[i][j].toString());
 			}
 			sb.append("\n");
 		}
@@ -160,7 +163,7 @@ public class TestStruct01 {
 	 * @return returns the newly generated maze. */
 	public static TestStruct01 generateAldousBroder(final int rows, final int columns) {
 		TestStruct01 drunkenWalkMaze = new TestStruct01(rows, columns);
-		int totalNodes = rows * columns, visitedNodes = 0, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
+		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
 		Node[][] drunkNodes = drunkenWalkMaze.nodes;
 		Node currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
 		Node previousNode = currentNode;
@@ -171,7 +174,7 @@ public class TestStruct01 {
 				{
 				case 0: // North
 					if (drunkRow == 0)
-						// drunk runs face first into a wall. He can't continue so nothing
+						// drunk runs face first into a wall. He can't continue ergo nothing
 						// happens this iteration.
 						continue;
 					drunkRow--;
@@ -197,6 +200,7 @@ public class TestStruct01 {
 				currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
 				joinAdjacentEdges(previousNode, currentNode);
 				visitedNodes++;
+				// System.out.println(drunkenWalkMaze);
 			} else {
 				currentNode = drunkNodes[drunkRow][drunkCol];
 			}
@@ -205,7 +209,7 @@ public class TestStruct01 {
 	}
 
 	public static void main(String[] args) {
-		TestStruct01 drunkMaze = TestStruct01.generateAldousBroder(10, 10);
-		System.out.println();
+		TestStruct01 drunkMaze = TestStruct01.generateAldousBroder(10, 15);
+		System.out.println(drunkMaze);
 	}
 }
