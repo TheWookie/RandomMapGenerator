@@ -102,7 +102,7 @@ public class TestStruct01 {
 		}
 	}
 
-	private static Random rand;
+	private static Random rand = new Random();
 	protected TestStruct01.Node[][] nodes;
 	protected int rows;
 	protected int columns;
@@ -114,7 +114,6 @@ public class TestStruct01 {
 		nodes = new Node[rows][columns];
 		this.rows = rows;
 		this.columns = columns;
-		rand = new Random();
 	}
 
 	@Override
@@ -152,14 +151,16 @@ public class TestStruct01 {
 		}
 	}
 
-	/** Known as the drunkard's-walk algorithm. Generate a maze by randomly
+	/**
+	 * Known as the drunkard's-walk algorithm. Generate a maze by randomly
 	 * visiting adjacent nodes until all the nodes in the specified space have
-	 * been visited. It is an unbiased algorithm, however, it is not guaranteed to
-	 * finish within a reasonable amount of time.
+	 * been visited. It is an unbiased algorithm, however, it is not guaranteed
+	 * to finish within a reasonable amount of time.
 	 * 
 	 * @param rows
 	 * @param columns
-	 * @return returns the newly generated maze. */
+	 * @return returns the newly generated maze.
+	 */
 	public static TestStruct01 generateAldousBroder(final int rows, final int columns) {
 		TestStruct01 drunkenWalkMaze = new TestStruct01(rows, columns);
 		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
@@ -169,37 +170,38 @@ public class TestStruct01 {
 		while (visitedNodes < totalNodes) {
 			previousNode = currentNode;
 			int direction = rand.nextInt(5);
-			switch (direction)
-				{
-				case 0: // North
-					if (drunkRow == 0)
-						// drunk runs face first into a wall. He can't continue ergo nothing
-						// happens this iteration.
-						continue;
-					drunkRow--;
-					break;
-				case 1: // East
-					if (drunkCol + 1 == columns)
-						continue;
-					drunkCol++;
-					break;
-				case 2: // South
-					if (drunkRow + 1 == rows)
-						continue;
-					drunkRow++;
-					break;
-				case 3: // West
-					if (drunkCol == 0)
-						continue;
-					drunkCol--;
-					break;
-				}
+			switch (direction) {
+			case 0: // North
+				if (drunkRow == 0)
+					// drunk runs face first into a wall. He can't continue ergo
+					// nothing
+					// happens this iteration.
+					continue;
+				drunkRow--;
+				break;
+			case 1: // East
+				if (drunkCol + 1 == columns)
+					continue;
+				drunkCol++;
+				break;
+			case 2: // South
+				if (drunkRow + 1 == rows)
+					continue;
+				drunkRow++;
+				break;
+			case 3: // West
+				if (drunkCol == 0)
+					continue;
+				drunkCol--;
+				break;
+			}
 			previousNode = currentNode;
 			if (drunkNodes[drunkRow][drunkCol] == null) {
 				currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
 				joinAdjacentEdges(previousNode, currentNode);
 				visitedNodes++;
-				System.out.println(drunkenWalkMaze);
+				// clearConsole();
+				// System.out.println(drunkenWalkMaze);
 			} else {
 				currentNode = drunkNodes[drunkRow][drunkCol];
 			}
@@ -207,8 +209,23 @@ public class TestStruct01 {
 		return drunkenWalkMaze;
 	}
 
+	// http://stackoverflow.com/a/17015039/1478636
+	public final static void clearConsole() {
+		try {
+			final String os = System.getProperty("os.name");
+			if (os.contains("Windows")) {
+				Runtime.getRuntime().exec("cls");
+			} else {
+				Runtime.getRuntime().exec("clear");
+			}
+		} catch (final Exception e) {
+			// System.err.println("CAN'T DO IT!");
+			System.out.println("Can't do it");
+		}
+	}
+
 	public static void main(String[] args) {
-		int rows = rand.nextInt(25), cols = rand.nextInt(25);
+		int rows = rand.nextInt(25) + 1, cols = rand.nextInt(25) + 1;
 		if (args.length > 0)
 			rows = cols = Integer.parseInt(args[0]);
 		if (args.length > 1)
