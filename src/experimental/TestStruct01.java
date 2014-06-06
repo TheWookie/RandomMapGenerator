@@ -34,7 +34,7 @@ public class TestStruct01 {
 		// Ascii character reference:
 		// http://www.alanwood.net/unicode/box_drawing.html
 		// Binary values for directions: N:1,E:2,S:4,W:8
-		private static String[] pathStringArr = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
+		private static final String[] pathStringArr = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 		TestStruct01.NodeCoord coord;
 		TestStruct01.Node[] edges;
 
