@@ -3,11 +3,7 @@ package experimental;
 import java.util.Random;
 import java.util.TreeMap;
 
-/**
- * 
- * @author paul.n.baker@utah.edu
- *
- */
+/** @author paul.n.baker@utah.edu */
 
 public class MazeMain {
 
@@ -140,11 +136,14 @@ public class MazeMain {
 		return drunkenWalkMaze;
 	}
 
+	/** @param rows
+	 * @param columns
+	 * @return */
 	public static MazeMain generateWilson(final int rows, final int columns) {
-		
-		MazeMain drunkenWalkMaze = new MazeMain(rows, columns);
+
+		MazeMain wilsonWalkMaze = new MazeMain(rows, columns);
 		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
-		MazeNode currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
+		MazeNode currentNode = wilsonWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
 		MazeNode previousNode = currentNode;
 
 		return null;
