@@ -30,11 +30,6 @@ public class TestStruct01 {
 	}
 
 	protected static class Node {
-		// Simple math will determine the character for the maze joint
-		// Ascii character reference:
-		// http://www.alanwood.net/unicode/box_drawing.html
-		// Binary values for directions: N:1,E:2,S:4,W:8
-		private static final String[] pathStringArr = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 		TestStruct01.NodeCoord coord;
 		TestStruct01.Node[] edges;
 
@@ -93,6 +88,16 @@ public class TestStruct01 {
 
 		@Override
 		public String toString() {
+			return corridorValue() + "";
+		}
+
+		/** Determines the numerical value of the corridor. 0 means that the corridor
+		 * segment has no connections in any direction and 15 means it connects in
+		 * all four directions. The values for each direction are as follows. 1 =
+		 * North, 2 = East, 4 = South, and 8 = West
+		 * 
+		 * @return */
+		public int corridorValue() {
 			int toStringIndex = 0;
 			if (edges[0] != null)
 				toStringIndex += 1;
@@ -102,7 +107,23 @@ public class TestStruct01 {
 				toStringIndex += 4;
 			if (edges[3] != null)
 				toStringIndex += 8;
-			return pathStringArr[toStringIndex];
+			return toStringIndex;
+		}
+	}
+
+	protected static class NodeSimple extends Node {
+
+		private static final String[] pathStringArr = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
+
+		public NodeSimple(int row, int col) {
+			super(row, col);
+		}
+
+		// Ascii character reference:
+		// http://www.alanwood.net/unicode/box_drawing.html
+		@Override
+		public String toString() {
+			return pathStringArr[corridorValue()];
 		}
 	}
 
@@ -133,14 +154,6 @@ public class TestStruct01 {
 			sb.append(nl);
 		}
 		return sb.toString();
-		// StringBuilder sb = new StringBuilder();
-		// for (int i = 0; i < nodes.length; i++) {
-		// for (int j = 0; j < nodes[i].length; j++) {
-		// sb.append(nodes[i][j] == null ? "█" : nodes[i][j].toString());
-		// }
-		// sb.append(System.getProperty("line.separator"));
-		// }
-		// return sb.toString();
 	}
 
 	private Node setGetNode(int row, int col, Node node) {
@@ -196,7 +209,7 @@ public class TestStruct01 {
 	public static TestStruct01 generateAldousBroder(final int rows, final int columns) {
 		TestStruct01 drunkenWalkMaze = new TestStruct01(rows, columns);
 		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
-		Node currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new Node(new NodeCoord(drunkRow, drunkCol)));
+		Node currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new NodeSimple(drunkRow, drunkCol));
 		Node previousNode = currentNode;
 		while (visitedNodes < totalNodes) {
 			previousNode = currentNode;
@@ -227,12 +240,11 @@ public class TestStruct01 {
 			}
 			previousNode = currentNode;
 			if ((currentNode = drunkenWalkMaze.getNode(drunkRow, drunkCol)) == null) {
-				currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new Node(new NodeCoord(drunkRow, drunkCol)));
+				currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new NodeSimple(drunkRow, drunkCol));
 				joinAdjacentEdges(previousNode, currentNode);
 				visitedNodes++;
-				// clearConsole();
-				System.out.println();
-				System.out.println(drunkenWalkMaze);
+				// System.out.println();
+				// System.out.println(drunkenWalkMaze);
 			}
 		}
 		return drunkenWalkMaze;
