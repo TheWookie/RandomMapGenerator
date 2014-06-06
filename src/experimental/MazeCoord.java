@@ -1,12 +1,8 @@
 package experimental;
 
-/**
- * 
- * @author paul.n.baker@utah.edu
- *
- */
+/** @author paul.n.baker@utah.edu */
 
-class MazeCoord {
+class MazeCoord implements Comparable<MazeCoord> {
 	int c, r;
 
 	public MazeCoord(int row, int col) {
@@ -25,5 +21,13 @@ class MazeCoord {
 
 	public int getCol() {
 		return c;
+	}
+
+	@Override
+	public int compareTo(MazeCoord o) {
+		int rowComp = this.r - o.r;
+		if (rowComp != 0)
+			return rowComp;
+		return this.c - o.c;
 	}
 }

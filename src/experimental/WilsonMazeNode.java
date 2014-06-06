@@ -10,4 +10,11 @@ public class WilsonMazeNode extends MazeNode {
 		super(coordinate);
 	}
 
+	public void resetAllDirections() {
+		this.setNorth(null);
+		this.setEast(null);
+		this.setSouth(null);
+		this.setWest(null);
+	}
+
 }

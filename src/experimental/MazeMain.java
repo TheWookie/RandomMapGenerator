@@ -58,33 +58,34 @@ public class MazeMain {
 		return currentRow.get(col);
 	}
 
-	/** Joins two nodes if and only if they are adjacent. If they are not adjacent,
-	 * then we will throw a runtime exception.
-	 * 
-	 * @param o1
-	 * @param o2 */
-	private static void biDirectionalLink(MazeNode o1, MazeNode o2) {
-		if (o1.getRow() - o2.getRow() > 1 || o1.getCol() - o2.getCol() > 1) {
-			throw new IllegalArgumentException("Nodes must be adjacent");
-		}
-		if (o1.getRow() == o2.getRow()) {
-			if (o1.getCol() < o2.getCol()) {
-				o1.setEast(o2);
-				o2.setWest(o1);
-			} else {
-				o1.setWest(o2);
-				o2.setEast(o1);
-			}
-		} else {
-			if (o1.getRow() < o2.getRow()) {
-				o1.setSouth(o2);
-				o2.setNorth(o1);
-			} else {
-				o1.setNorth(o2);
-				o2.setSouth(o1);
-			}
-		}
-	}
+	// /** Joins two nodes if and only if they are adjacent. If they are not
+	// adjacent,
+	// * then we will throw a runtime exception.
+	// *
+	// * @param o1
+	// * @param o2 */
+	// private static void biDirectionalLink(MazeNode o1, MazeNode o2) {
+	// if (o1.getRow() - o2.getRow() > 1 || o1.getCol() - o2.getCol() > 1) {
+	// throw new IllegalArgumentException("Nodes must be adjacent");
+	// }
+	// if (o1.getRow() == o2.getRow()) {
+	// if (o1.getCol() < o2.getCol()) {
+	// o1.setEast(o2);
+	// o2.setWest(o1);
+	// } else {
+	// o1.setWest(o2);
+	// o2.setEast(o1);
+	// }
+	// } else {
+	// if (o1.getRow() < o2.getRow()) {
+	// o1.setSouth(o2);
+	// o2.setNorth(o1);
+	// } else {
+	// o1.setNorth(o2);
+	// o2.setSouth(o1);
+	// }
+	// }
+	// }
 
 	/** Known as the drunkard's-walk algorithm. Generate a maze by randomly
 	 * visiting adjacent nodes until all the nodes in the specified space have
@@ -132,7 +133,8 @@ public class MazeMain {
 			previousNode = currentNode;
 			if ((currentNode = drunkenWalkMaze.getNode(drunkRow, drunkCol)) == null) {
 				currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
-				biDirectionalLink(previousNode, currentNode);
+				// biDirectionalLink(previousNode, currentNode);
+				previousNode.biDirectionalLink(currentNode);
 				visitedNodes++;
 			}
 		}
@@ -145,12 +147,22 @@ public class MazeMain {
 	public static MazeMain generateWilson(final int rows, final int columns) {
 
 		MazeMain wilsonWalkMaze = new MazeMain(rows, columns);
-		int visitedNodes = 1, totalNodes = rows * columns, startCol = rand.nextInt(columns), startRow = rand.nextInt(rows);
+		int visitedNodes = 1, totalNodes = rows * columns;
 		// Setup our end node
 		int destCol = rand.nextInt(columns), destRow = rand.nextInt(rows);
 		wilsonWalkMaze.setNode(destRow, destCol, new MazeNode(destRow, destCol));
 		while (visitedNodes < totalNodes) {
-			MazeMain temp = new MazeMain(rows, columns);
+			// MazeMain temp = new MazeMain(rows, columns);
+			int startCol, startRow;
+			MazeNode previous, current;
+			do {
+				startRow = rand.nextInt(rows);
+				startCol = rand.nextInt(columns);
+			} while ((current = wilsonWalkMaze.getNode(startRow, startCol)) == null || current instanceof WilsonMazeNode);
+
+			// MazeNode current = previous = wilsonWalkMaze.setGetNode(startRow,
+			// startCol, new WilsonMazeNode(startRow, startCol));
+
 		}
 
 		MazeNode currentNode = wilsonWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));

@@ -1,12 +1,8 @@
 package experimental;
 
-/**
- * 
- * @author paul.n.baker@utah.edu
- *
- */
+/** @author paul.n.baker@utah.edu */
 
-class MazeNode {
+class MazeNode implements Comparable<MazeNode> {
 	private static final String[] pathStringArr = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 	MazeCoord coord;
 	MazeNode[] edges;
@@ -64,6 +60,38 @@ class MazeNode {
 		edges[3] = west;
 	}
 
+	public void monoDirectionalLink(MazeNode other) {
+		if (this == other || this.compareTo(other) == 0) {
+			throw new IllegalArgumentException("Node linked cannot be itself");
+		}
+		if (this.getRow() - other.getRow() > 1 || this.getCol() - other.getCol() > 1) {
+			throw new IllegalArgumentException("Nodes must be adjacent");
+		}
+		if (this.getRow() == other.getRow()) {
+			if (this.getCol() < other.getCol()) {
+				this.setEast(other);
+			} else {
+				this.setWest(other);
+			}
+		} else {
+			if (this.getRow() < other.getRow()) {
+				this.setSouth(other);
+			} else {
+				this.setNorth(other);
+			}
+		}
+	}
+
+	/** Joins two nodes if and only if they are adjacent. If they are not adjacent,
+	 * then we will throw a runtime exception.
+	 * 
+	 * @param other
+	 *          The other node must be adjacent, must not be itself */
+	public void biDirectionalLink(MazeNode other) {
+		monoDirectionalLink(other);
+		other.monoDirectionalLink(this);
+	}
+
 	@Override
 	public String toString() {
 		return pathStringArr[corridorValue()];
@@ -86,5 +114,10 @@ class MazeNode {
 		if (edges[3] != null)
 			toStringIndex += 8;
 		return toStringIndex;
+	}
+
+	@Override
+	public int compareTo(MazeNode o) {
+		return this.coord.compareTo(o.coord);
 	}
 }
