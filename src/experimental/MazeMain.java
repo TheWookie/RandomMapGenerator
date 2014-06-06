@@ -3,6 +3,12 @@ package experimental;
 import java.util.Random;
 import java.util.TreeMap;
 
+/**
+ * 
+ * @author paul.n.baker@utah.edu
+ *
+ */
+
 public class MazeMain {
 
 	private static Random rand = new Random();
@@ -132,6 +138,16 @@ public class MazeMain {
 			}
 		}
 		return drunkenWalkMaze;
+	}
+
+	public static MazeMain generateWilson(final int rows, final int columns) {
+		
+		MazeMain drunkenWalkMaze = new MazeMain(rows, columns);
+		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
+		MazeNode currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
+		MazeNode previousNode = currentNode;
+
+		return null;
 	}
 
 	// I can't get this to work for the life of me.

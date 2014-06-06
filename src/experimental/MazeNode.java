@@ -1,5 +1,11 @@
 package experimental;
 
+/**
+ * 
+ * @author paul.n.baker@utah.edu
+ *
+ */
+
 class MazeNode {
 	private static final String[] pathStringArr = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 	MazeCoord coord;

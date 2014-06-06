@@ -1,5 +1,11 @@
 package experimental;
 
+/**
+ * 
+ * @author paul.n.baker@utah.edu
+ *
+ */
+
 class MazeCoord {
 	int c, r;
 
