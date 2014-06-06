@@ -1,6 +1,10 @@
 package experimental;
 
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 public class TestStruct01 {
 	protected static class NodeCoord {
@@ -30,7 +34,7 @@ public class TestStruct01 {
 		// Ascii character reference:
 		// http://www.alanwood.net/unicode/box_drawing.html
 		// Binary values for directions: N:1,E:2,S:4,W:8
-		private static String[] toStringArray = { "?", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
+		private static String[] pathStringArr = { " ", "╵", "╶", "└", "╷", "│", "┌", "├", "╴", "┘", "─", "┴", "┐", "┤", "┬", "┼" };
 		TestStruct01.NodeCoord coord;
 		TestStruct01.Node[] edges;
 
@@ -98,12 +102,12 @@ public class TestStruct01 {
 				toStringIndex += 4;
 			if (edges[3] != null)
 				toStringIndex += 8;
-			return toStringArray[toStringIndex];
+			return pathStringArr[toStringIndex];
 		}
 	}
 
 	private static Random rand = new Random();
-	protected TestStruct01.Node[][] nodes;
+	protected TreeMap<Integer, TreeMap<Integer, Node>> nodes;
 	protected int rows;
 	protected int columns;
 
@@ -111,21 +115,51 @@ public class TestStruct01 {
 		if (rows <= 0 || columns <= 0) {
 			throw new IllegalArgumentException("Sizes must be a positive integer.");
 		}
-		nodes = new Node[rows][columns];
+		nodes = new TreeMap<Integer, TreeMap<Integer, Node>>();
 		this.rows = rows;
 		this.columns = columns;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < nodes.length; i++) {
-			for (int j = 0; j < nodes[i].length; j++) {
-				sb.append(nodes[i][j] == null ? "█" : nodes[i][j].toString());
+		final StringBuilder sb = new StringBuilder();
+		final String nl = System.getProperty("line.separator");
+		for (final int row : nodes.keySet()) {
+			final TreeMap<Integer, Node> currentRow = nodes.get(row);
+			for (final int col : currentRow.keySet()) {
+				final Node currentNode = currentRow.get(col);
+				sb.append(currentNode == null ? "X" : currentNode.toString());
 			}
-			sb.append(System.getProperty("line.separator"));
+			sb.append(nl);
 		}
 		return sb.toString();
+		// StringBuilder sb = new StringBuilder();
+		// for (int i = 0; i < nodes.length; i++) {
+		// for (int j = 0; j < nodes[i].length; j++) {
+		// sb.append(nodes[i][j] == null ? "█" : nodes[i][j].toString());
+		// }
+		// sb.append(System.getProperty("line.separator"));
+		// }
+		// return sb.toString();
+	}
+
+	private Node setGetNode(int row, int col, Node node) {
+		setNode(row, col, node);
+		return node;
+	}
+
+	private void setNode(int row, int col, Node node) {
+		if (!nodes.containsKey(row)) {
+			nodes.put(row, new TreeMap<Integer, Node>());
+		}
+		nodes.get(row).put(col, node);
+	}
+
+	private Node getNode(int row, int col) {
+		final TreeMap<Integer, Node> currentRow = nodes.get(row);
+		if (currentRow == null)
+			return null;
+		return currentRow.get(col);
 	}
 
 	private static void joinAdjacentEdges(Node o1, Node o2) {
@@ -151,21 +185,18 @@ public class TestStruct01 {
 		}
 	}
 
-	/**
-	 * Known as the drunkard's-walk algorithm. Generate a maze by randomly
+	/** Known as the drunkard's-walk algorithm. Generate a maze by randomly
 	 * visiting adjacent nodes until all the nodes in the specified space have
-	 * been visited. It is an unbiased algorithm, however, it is not guaranteed
-	 * to finish within a reasonable amount of time.
+	 * been visited. It is an unbiased algorithm, however, it is not guaranteed to
+	 * finish within a reasonable amount of time.
 	 * 
 	 * @param rows
 	 * @param columns
-	 * @return returns the newly generated maze.
-	 */
+	 * @return returns the newly generated maze. */
 	public static TestStruct01 generateAldousBroder(final int rows, final int columns) {
 		TestStruct01 drunkenWalkMaze = new TestStruct01(rows, columns);
 		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
-		Node[][] drunkNodes = drunkenWalkMaze.nodes;
-		Node currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
+		Node currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new Node(new NodeCoord(drunkRow, drunkCol)));
 		Node previousNode = currentNode;
 		while (visitedNodes < totalNodes) {
 			previousNode = currentNode;
@@ -174,8 +205,7 @@ public class TestStruct01 {
 			case 0: // North
 				if (drunkRow == 0)
 					// drunk runs face first into a wall. He can't continue ergo
-					// nothing
-					// happens this iteration.
+					// nothing happens this iteration.
 					continue;
 				drunkRow--;
 				break;
@@ -196,14 +226,13 @@ public class TestStruct01 {
 				break;
 			}
 			previousNode = currentNode;
-			if (drunkNodes[drunkRow][drunkCol] == null) {
-				currentNode = drunkNodes[drunkRow][drunkCol] = new Node(new NodeCoord(drunkRow, drunkCol));
+			if ((currentNode = drunkenWalkMaze.getNode(drunkRow, drunkCol)) == null) {
+				currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new Node(new NodeCoord(drunkRow, drunkCol)));
 				joinAdjacentEdges(previousNode, currentNode);
 				visitedNodes++;
 				// clearConsole();
-				// System.out.println(drunkenWalkMaze);
-			} else {
-				currentNode = drunkNodes[drunkRow][drunkCol];
+				System.out.println();
+				System.out.println(drunkenWalkMaze);
 			}
 		}
 		return drunkenWalkMaze;
@@ -219,13 +248,13 @@ public class TestStruct01 {
 				Runtime.getRuntime().exec("clear");
 			}
 		} catch (final Exception e) {
-			// System.err.println("CAN'T DO IT!");
+			System.err.println("Can't do it");
 			System.out.println("Can't do it");
 		}
 	}
 
 	public static void main(String[] args) {
-		int rows = rand.nextInt(25) + 1, cols = rand.nextInt(25) + 1;
+		int rows = rand.nextInt(20) + 5, cols = rand.nextInt(20) + 5;
 		if (args.length > 0)
 			rows = cols = Integer.parseInt(args[0]);
 		if (args.length > 1)
