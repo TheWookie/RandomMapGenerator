@@ -8,6 +8,9 @@ import java.util.TreeMap;
 public class MazeMain {
 
 	private static Random rand = new Random();
+	// TreeMaps are not the best structure for an arbitrary maze, however, they
+	// are if you need them to preserve their natural order (the order of rows)
+	// and you need them to arbitrarily change sizes in the future.
 	protected TreeMap<Integer, TreeMap<Integer, MazeNode>> nodes;
 	protected int rows;
 	protected int columns;
@@ -60,7 +63,7 @@ public class MazeMain {
 	 * 
 	 * @param o1
 	 * @param o2 */
-	private static void joinAdjacentEdges(MazeNode o1, MazeNode o2) {
+	private static void biDirectionalLink(MazeNode o1, MazeNode o2) {
 		if (o1.getRow() - o2.getRow() > 1 || o1.getCol() - o2.getCol() > 1) {
 			throw new IllegalArgumentException("Nodes must be adjacent");
 		}
@@ -96,7 +99,7 @@ public class MazeMain {
 	 * @return returns the newly generated maze. */
 	public static MazeMain generateAldousBroder(final int rows, final int columns) {
 		MazeMain drunkenWalkMaze = new MazeMain(rows, columns);
-		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
+		int visitedNodes = 1, totalNodes = rows * columns, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
 		MazeNode currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
 		MazeNode previousNode = currentNode;
 		while (visitedNodes < totalNodes) {
@@ -129,7 +132,7 @@ public class MazeMain {
 			previousNode = currentNode;
 			if ((currentNode = drunkenWalkMaze.getNode(drunkRow, drunkCol)) == null) {
 				currentNode = drunkenWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
-				joinAdjacentEdges(previousNode, currentNode);
+				biDirectionalLink(previousNode, currentNode);
 				visitedNodes++;
 			}
 		}
@@ -142,7 +145,14 @@ public class MazeMain {
 	public static MazeMain generateWilson(final int rows, final int columns) {
 
 		MazeMain wilsonWalkMaze = new MazeMain(rows, columns);
-		int totalNodes = rows * columns, visitedNodes = 1, drunkCol = rand.nextInt(columns), drunkRow = rand.nextInt(rows);
+		int visitedNodes = 1, totalNodes = rows * columns, startCol = rand.nextInt(columns), startRow = rand.nextInt(rows);
+		// Setup our end node
+		int destCol = rand.nextInt(columns), destRow = rand.nextInt(rows);
+		wilsonWalkMaze.setNode(destRow, destCol, new MazeNode(destRow, destCol));
+		while (visitedNodes < totalNodes) {
+			MazeMain temp = new MazeMain(rows, columns);
+		}
+
 		MazeNode currentNode = wilsonWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
 		MazeNode previousNode = currentNode;
 
