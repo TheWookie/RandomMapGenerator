@@ -1,4 +1,4 @@
-package iteration1;
+package experimental.iteration1;
 
 public class WilsonMazeNode extends MazeNode {
 
