@@ -145,38 +145,38 @@ public class MazeMain {
     return drunkenWalkMaze;
   }
 
-  /**
-   * @param rows
-   * @param columns
-   * @return
-   */
-  public static MazeMain generateWilson(final int rows, final int columns) {
-
-    MazeMain wilsonWalkMaze = new MazeMain(rows, columns);
-    int visitedNodes = 1, totalNodes = rows * columns;
-    // Setup our end node
-    int destCol = rand.nextInt(columns), destRow = rand.nextInt(rows);
-    wilsonWalkMaze.setNode(destRow, destCol, new MazeNode(destRow, destCol));
-    while (visitedNodes < totalNodes) {
-      // MazeMain temp = new MazeMain(rows, columns);
-      int startCol, startRow;
-      MazeNode previous, current;
-      do {
-        startRow = rand.nextInt(rows);
-        startCol = rand.nextInt(columns);
-      }
-      while ((current = wilsonWalkMaze.getNode(startRow, startCol)) == null || current instanceof WilsonMazeNode);
-
-      // MazeNode current = previous = wilsonWalkMaze.setGetNode(startRow,
-      // startCol, new WilsonMazeNode(startRow, startCol));
-
-    }
-
-    MazeNode currentNode = wilsonWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
-    MazeNode previousNode = currentNode;
-
-    return null;
-  }
+  // /**
+  // * @param rows
+  // * @param columns
+  // * @return
+  // */
+  // public static MazeMain generateWilson(final int rows, final int columns) {
+  //
+  // MazeMain wilsonWalkMaze = new MazeMain(rows, columns);
+  // int visitedNodes = 1, totalNodes = rows * columns;
+  // // Setup our end node
+  // int destCol = rand.nextInt(columns), destRow = rand.nextInt(rows);
+  // wilsonWalkMaze.setNode(destRow, destCol, new MazeNode(destRow, destCol));
+  // while (visitedNodes < totalNodes) {
+  // // MazeMain temp = new MazeMain(rows, columns);
+  // int startCol, startRow;
+  // MazeNode previous, current;
+  // do {
+  // startRow = rand.nextInt(rows);
+  // startCol = rand.nextInt(columns);
+  // }
+  // while ((current = wilsonWalkMaze.getNode(startRow, startCol)) == null || current instanceof WilsonMazeNode);
+  //
+  // // MazeNode current = previous = wilsonWalkMaze.setGetNode(startRow,
+  // // startCol, new WilsonMazeNode(startRow, startCol));
+  //
+  // }
+  //
+  // MazeNode currentNode = wilsonWalkMaze.setGetNode(drunkRow, drunkCol, new MazeNode(drunkRow, drunkCol));
+  // MazeNode previousNode = currentNode;
+  //
+  // return null;
+  // }
 
   // I can't get this to work for the life of me.
   // http://stackoverflow.com/a/17015039/1478636
