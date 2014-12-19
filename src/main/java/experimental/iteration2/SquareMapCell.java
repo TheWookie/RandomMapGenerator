@@ -13,16 +13,66 @@ import java.util.List;
  */
 public class SquareMapCell extends MapCell {
 
-  public enum SquareMapCellAdjacent {
-    NORTH(0b1), EAST(0b10), SOUTH(0b100), WEST(0b100);
-    private final int binaryValue;
+  public enum SquareMapCellDirection {
+    NORTH(0b1, 0), EAST(0b10, 1), SOUTH(0b100, 2), WEST(0b100, 3);
+    private final int binaryValue, positionValue;
 
-    SquareMapCellAdjacent(int binVal) {
+    SquareMapCellDirection(int binVal, int position) {
       binaryValue = binVal;
+      positionValue = position;
+    }
+
+    /**
+     * This returns the 0 based position of the enum.
+     * 
+     * @return
+     */
+    public int getPositionValue() {
+      return positionValue;
+    }
+
+    /**
+     * Returns the opposite direction. Eg, South will return North. East will return West.
+     * 
+     * @return
+     */
+    public SquareMapCellDirection oppositeDirection() {
+      return directionFromInt((getPositionValue() + 2) % 4);
+    }
+
+    /**
+     * Pass a value from [0, 3] to get its corresponding direction
+     * 
+     * <pre>
+     * 0 = North
+     * 1 = East
+     * 2 = South
+     * 3 = West
+     * </pre>
+     * 
+     * @param value
+     * @return
+     */
+    public static SquareMapCellDirection directionFromInt(int value) {
+      switch (value) {
+        case 0:
+          return NORTH;
+        case 1:
+          return EAST;
+        case 2:
+          return SOUTH;
+        case 3:
+          return WEST;
+        default:
+          throw new IllegalArgumentException();
+      }
     }
   }
 
-  // In the following order: north, east, south, west
+  /**
+   * In the following order: north, east, south, west. For convention, we will always go clockwise starting from the top
+   * (or 12 o'clock position)
+   */
   private MapCell[] adjacentCells;
 
   private int adjacentValue;
