@@ -1,5 +1,6 @@
 package experimental.iteration2;
 
+import java.awt.Point;
 import java.util.List;
 
 /**
@@ -10,6 +11,10 @@ import java.util.List;
  */
 public abstract class MapCell {
 
-  public abstract List<MapCell> getAdjacent();
+  public abstract ImmutablePoint getCoordinates();
+
+  public abstract List<MapCell> getAdjacentCells();
+
+  public abstract void clearAdjacentCells();
 
 }
