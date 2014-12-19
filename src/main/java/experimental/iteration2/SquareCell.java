@@ -11,13 +11,13 @@ import java.util.List;
  * 
  * @author paulbaker
  */
-public class SquareMapCell extends MapCell {
+public class SquareCell extends MapCell {
 
-  public enum SquareMapCellDirection {
+  public enum SquareCellDirection {
     NORTH(0b1, 0), EAST(0b10, 1), SOUTH(0b100, 2), WEST(0b100, 3);
     private final int binaryValue, positionValue;
 
-    SquareMapCellDirection(int binVal, int position) {
+    SquareCellDirection(int binVal, int position) {
       binaryValue = binVal;
       positionValue = position;
     }
@@ -36,7 +36,7 @@ public class SquareMapCell extends MapCell {
      * 
      * @return
      */
-    public SquareMapCellDirection oppositeDirection() {
+    public SquareCellDirection oppositeDirection() {
       return directionFromInt((getPositionValue() + 2) % 4);
     }
 
@@ -53,7 +53,7 @@ public class SquareMapCell extends MapCell {
      * @param value
      * @return
      */
-    public static SquareMapCellDirection directionFromInt(int value) {
+    public static SquareCellDirection directionFromInt(int value) {
       switch (value) {
         case 0:
           return NORTH;
@@ -79,11 +79,11 @@ public class SquareMapCell extends MapCell {
 
   private ImmutablePoint coordinate;
 
-  public SquareMapCell(int row, int column) {
+  public SquareCell(int row, int column) {
     this(new ImmutablePoint(row, column));
   }
 
-  public SquareMapCell(ImmutablePoint coordinate) {
+  public SquareCell(ImmutablePoint coordinate) {
     this.coordinate = coordinate;
     clearAdjacentCells();
   }
